@@ -87,7 +87,7 @@ public class Country implements Comparable<Country>{
      * @return the population for the given year if the year is found, 0 otherwise
      */
 
-     //Time complexity: 0 (n log n)
+     //Time complexity: 0 (log n)
     public int getPopulation(int year) {
         if (population == null || population.isEmpty()) {
             return 0;

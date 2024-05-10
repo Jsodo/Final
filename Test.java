@@ -70,7 +70,7 @@ public class Test{
         catch(FileNotFoundException e){
             System.out.println("File not found");
         }
-    }
+    } 
     /**
      * Method to check if a country code is valid
      * @param code the country code
@@ -78,7 +78,7 @@ public class Test{
      */
     public static void checkCode(String code) throws Exception {
         if (!countryCodes.contains(code)) {
-            throw new Exception("Invalid country code: " + code);
+            throw new Exception("Invalid code: " + code);
         }
     }
     /**
@@ -91,10 +91,10 @@ public class Test{
             Scanner scanner = new Scanner(new File(filename));
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] attributes = line.split(",");
-                String countryCode = attributes[0].trim();
-                String countryName = attributes[1].trim();
-                double countryArea = Double.parseDouble(attributes[2].trim());
+                String[] token = line.split(",");
+                String countryCode = token[0].trim();
+                String countryName = token[1].trim();
+                double countryArea = Double.parseDouble(token[2].trim());
 
                 try {
                     checkCode(countryCode); 
@@ -120,17 +120,17 @@ public class Test{
             Scanner read = new Scanner(new File(filename));
             while(read.hasNextLine()){
                 String line = read.nextLine();
-                String[] attributes = line.split(",");
-                String countryCode = attributes[0];
+                String[] token = line.split(",");
+                String countryCode = token[0];
                 Country c = tree.get(countryCode);
                 if(c != null){
-                    c.addEmission(Integer.parseInt(attributes[1]), Double.parseDouble(attributes[2]));
-                    c.addPopulation(Integer.parseInt(attributes[1]), Integer.parseInt(attributes[3]));
+                    c.addEmission(Integer.parseInt(token[1]), Double.parseDouble(token[2]));
+                    c.addPopulation(Integer.parseInt(token[1]), Integer.parseInt(token[3]));
                     for(int i=2001; i<=2021;i++){
                         line = read.nextLine();
-                        attributes = line.split(",");
-                        c.addEmission(Integer.parseInt(attributes[1]), Double.parseDouble(attributes[2]));
-                        c.addPopulation(Integer.parseInt(attributes[1]), Integer.parseInt(attributes[3]));
+                        token = line.split(",");
+                        c.addEmission(Integer.parseInt(token[1]), Double.parseDouble(token[2]));
+                        c.addPopulation(Integer.parseInt(token[1]), Integer.parseInt(token[3]));
                     }
                 }
             }
@@ -166,7 +166,7 @@ public class Test{
                     }
                 }
             }
-        }
+        } 
 
         return extremeCountry;
     }
@@ -190,13 +190,22 @@ public class Test{
      * Method to display the list of countries sorted by area
      * @param tree the binary search tree with the list of countries
      */
-    public static void sortCountries(TreeMap<String,Country> tm){
+    public static void sortCountries(TreeMap<String, Country> tm) {
         ArrayList<Country> countries = new ArrayList<>(tm.values());
-
-       // public static <E extends Comparable<E>> void comparableByArea (TreeMap <Country> countries){}
-        quickSort(countries);
-
-
+    
+        Comparator<Country> comparatorByArea = new Comparator<Country>() {
+            @Override
+            public int compare(Country c1, Country c2) {
+                return Double.compare(c1.getArea(), c2.getArea());
+            }
+        };
+    
+        quickSort(countries, 0, countries.size() - 1, comparatorByArea);
+    
+        System.out.printf("%-10s\t%-32s\t%-10s\n", "Code", "Name", "Area(sq.ft)");
+        for (Country country : countries) {
+            System.out.printf("%-10s\t%-32s\t%-10.2f\n", country.getCode(), country.getName(), country.getArea());
+        }
     }
     /**
      * QuickSort Method
@@ -205,7 +214,7 @@ public class Test{
      */
     public static <E extends Comparable<E>> void quickSort(ArrayList<E> list) {
         iterations =0;
-        quickSort(list);
+        //quickSort(list);
         
     }
     /**
@@ -247,7 +256,7 @@ public class Test{
             }
         }
         swap(list, first, index);
-        return index;
+        return index; 
     }
 
     /**
